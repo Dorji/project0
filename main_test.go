@@ -1,15 +1,20 @@
-package main
+// Ginkgo BDD Testing Framework <http://onsi.github.io/ginkgo></http:>
+// Gomega Matcher Library <http://onsi.github.io/gomega></http:>
+
+package kata_test
 
 import (
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
+	"codewarrior/kata"
+	"github.com/onsi/ginkgo"
+	"github.com/onsi/gomega"
 )
 
-var _ = Describe("TwoOldestAges", func() {
-	It("should return 18 and 83 for input []int{6,5,83,5,3,18}", func() {
-		Expect(TwoOldestAges([]int{6, 5, -83, 5, 3, 18})).To(Equal([2]int{18, 83}))
-	})
-	It("should return 45 and 87 for input []int{1,5,87,45,8,8}", func() {
-		Expect(TwoOldestAges([]int{1, 5, 87, 45, 8, 8})).To(Equal([2]int{45, 87}))
+var _ = Describe("Test Example", func() {
+	It("fixed tests", func() {
+		Expect(DigitalRoot(16)).To(Equal(7))
+		Expect(DigitalRoot(195)).To(Equal(6))
+		Expect(DigitalRoot(992)).To(Equal(2))
+		Expect(DigitalRoot(167346)).To(Equal(9))
+		Expect(DigitalRoot(0)).To(Equal(0))
 	})
 })
