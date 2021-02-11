@@ -1,45 +1,37 @@
 package main
 
 import (
+	//rftn "coursera/reflection"
+	//evnlb "evenLab"
 	"fmt"
 	"math"
-	"strconv"
-	"unicode/utf8"
 )
 
 func main() {
-	fmt.Println(utf8.RuneCountInString(strconv.Itoa(144444)))
-	fmt.Printf("sum is: %v", DigitalRoot(195))
+	fmt.Println(m_round(4.72))
+	fmt.Println(m_round(2.35))
+	fmt.Println(m_round(2.5))
+	fmt.Println(m_round(6))
+	fmt.Println(m_round(3.13))
 }
 
-func DigitalRoot(n int) int {
-	var sum int = 0
-	var slc = IntToSlice(n)
-	for _, v := range slc {
-		sum += v
-	}
-	if sum/10 > 0 {
-		sum = DigitalRoot(sum)
-	}
+func m_round(v float64) float64 {
+	floor := math.Floor(v)
+	dr := v - floor
+	var res float64 = 0
+	if dr > 0.5 && dr < 0.75 {
+		res = 0.5
+	} else if dr > 0.5 && dr > 0.75 {
 
-	return sum
-}
-func IntToSlice(n int) []int {
-	var number = n
-	var lenN = utf8.RuneCountInString(strconv.Itoa(n))
-	res := make([]int, 0, lenN)
-	var elem0 int
-	var elem1 int
+		res = 1
+	} else if dr < 0.5 && dr > 0.25 {
 
-	for i := 1; i < lenN+1; i++ {
-		elem0 = number % int(math.Pow(float64(10), float64(i)))
-		if i != 1 {
+		res = 0.5
+	} else if dr < 0.5 && dr < 0.25 {
 
-			elem1 = elem0 / int(math.Pow(float64(10), float64(i-1)))
-		} else {
-			elem1 = elem0
-		}
-		res = append(res, elem1)
+		res = 0
+	} else if dr == 0.5 {
+		res = 0.5
 	}
-	return res
+	return res + floor
 }
