@@ -2,44 +2,30 @@ package main
 
 import (
 	"fmt"
-	"math/rand"
+	"math"
 )
 
 func main() {
 
-	var mass = []int{2, 3, 42, 5, 6, 8, 9, 333, 55, 6}
+	var ar = []int32{1, 2, 1, 2, 1, 3, 2}
 
-	fmt.Println(quicksort(mass))
+	fmt.Println(sockMerchant(7, ar))
 
 }
-
-func quicksort(mass []int) []int {
-	if len(mass) < 2 {
-		return mass
-	}
-	left := 0
-	right := len(mass) - 1
-
-	pivot := rand.Int() % len(mass)
-
-	tmp := 0
-	tmp = mass[pivot]
-	mass[pivot] = mass[right]
-	mass[right] = tmp
-
-	for i, _ := range mass {
-		if mass[i] < mass[right] {
-			tmp = mass[left]
-			mass[left] = mass[i]
-			mass[i] = tmp
-			left++
+func sockMerchant(n int32, ar []int32) int32 {
+	//var m map[int32]int32
+	colors := make(map[int32]int32)
+	for _, v := range ar {
+		if _, ok := colors[v]; !ok {
+			colors[v] = 1
+		} else {
+			colors[v] = colors[v] + 1
 		}
 	}
-	tmp = mass[left]
-	mass[left] = mass[right]
-	mass[right] = tmp
 
-	quicksort(mass[:left])
-	quicksort(mass[left+1:])
-	return mass
+	var res int32 = 0
+	for _, v := range colors {
+		res = res + int32(math.Floor(float64(v)/2))
+	}
+	return res
 }
