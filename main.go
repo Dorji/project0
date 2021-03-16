@@ -2,30 +2,49 @@ package main
 
 import (
 	"fmt"
-	"math"
+	"reflect"
+	"strings"
 )
 
 func main() {
-
-	var ar = []int32{1, 2, 1, 2, 1, 3, 2}
-
-	fmt.Println(sockMerchant(7, ar))
+	fmt.Println(isAnagram("abracadabra", "abracadaarb"))
+	fmt.Println(isAnagram("abracadabra", "abracadaarc"))
+	fmt.Println(isAnagram("abrac", "dsfdf"))
 
 }
-func sockMerchant(n int32, ar []int32) int32 {
-	//var m map[int32]int32
-	colors := make(map[int32]int32)
-	for _, v := range ar {
-		if _, ok := colors[v]; !ok {
-			colors[v] = 1
-		} else {
-			colors[v] = colors[v] + 1
-		}
+func isAnagram(str0 string, str1 string) bool {
+
+	vocab0 := make(map[string]int)
+	vocab1 := make(map[string]int)
+
+	arr0 := strings.Split(str0, "")
+	arr1 := strings.Split(str1, "")
+
+	if len(arr0) != len(arr1) {
+		return false
 	}
 
-	var res int32 = 0
-	for _, v := range colors {
-		res = res + int32(math.Floor(float64(v)/2))
+	for _, v := range arr0 {
+		if _, ok := vocab0[v]; !ok {
+			vocab0[v] = 1
+		} else {
+			vocab0[v]++
+		}
 	}
-	return res
+	for _, v := range arr1 {
+		if _, ok := vocab1[v]; !ok {
+			vocab1[v] = 1
+		} else {
+			vocab1[v]++
+		}
+	}
+	fmt.Println(vocab1)
+	fmt.Println(vocab0)
+	if reflect.DeepEqual(vocab0, vocab1) {
+		return true
+	} else {
+
+		return false
+	}
+
 }
