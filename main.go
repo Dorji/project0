@@ -2,49 +2,30 @@ package main
 
 import (
 	"fmt"
-	"reflect"
-	"strings"
+	"unicode/utf8"
 )
 
 func main() {
-	fmt.Println(isAnagram("abracadabra", "abracadaarb"))
-	fmt.Println(isAnagram("abracadabra", "abracadaarc"))
-	fmt.Println(isAnagram("abrac", "dsfdf"))
+	//	()
+	//	(()) ()()
+	//	()()() ()(()) (())() ((())) (()())
+	generateParentheses("", 0, 0, 3)
 
 }
-func isAnagram(str0 string, str1 string) bool {
 
-	vocab0 := make(map[string]int)
-	vocab1 := make(map[string]int)
+func generateParentheses(curr string, open int, closed int, n int) string {
 
-	arr0 := strings.Split(str0, "")
-	arr1 := strings.Split(str1, "")
-
-	if len(arr0) != len(arr1) {
-		return false
+	if utf8.RuneCountInString(curr) == 2*n {
+		fmt.Println(curr)
+		return curr
 	}
+	if open < n {
 
-	for _, v := range arr0 {
-		if _, ok := vocab0[v]; !ok {
-			vocab0[v] = 1
-		} else {
-			vocab0[v]++
-		}
+		generateParentheses(curr+"(", open+1, closed, n)
 	}
-	for _, v := range arr1 {
-		if _, ok := vocab1[v]; !ok {
-			vocab1[v] = 1
-		} else {
-			vocab1[v]++
-		}
-	}
-	fmt.Println(vocab1)
-	fmt.Println(vocab0)
-	if reflect.DeepEqual(vocab0, vocab1) {
-		return true
-	} else {
+	if closed < open {
 
-		return false
+		generateParentheses(curr+")", open, closed+1, n)
 	}
-
+	return curr
 }
