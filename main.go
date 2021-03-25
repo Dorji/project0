@@ -1,31 +1,71 @@
 package main
 
-import (
-	"fmt"
-	"unicode/utf8"
+import "fmt"
+
+const (
+	// Vert - кол-во вершин
+	Vert = 7
 )
 
-func main() {
-	//	()
-	//	(()) ()()
-	//	()()() ()(()) (())() ((())) (()())
-	generateParentheses("", 0, 0, 3)
-
+var used = make(map[int]bool)
+var graph = [Vert][]int{
+	{1, 2},
+	{0, 2},
+	{0, 1, 3, 4, 5},
+	{2},
+	{2, 6},
+	{2, 6},
+	{4, 5},
 }
 
-func generateParentheses(curr string, open int, closed int, n int) string {
+func main() {
+	fmt.Println(dfs(3, 6))
+	fmt.Println(bfs(5))
+}
 
-	if utf8.RuneCountInString(curr) == 2*n {
-		fmt.Println(curr)
-		return curr
+func dfs(start int, needle int) int {
+	used[start] = true
+	for _, n := range graph {
+		for _, v := range n {
+			if _, ok := used[v]; !ok {
+				if v == needle {
+					return v
+				}
+				dfs(v, needle)
+			}
+		}
 	}
-	if open < n {
+	return -1
+}
 
-		generateParentheses(curr+"(", open+1, closed, n)
+func bfs(needle int) int {
+	graph := [Vert][]int{
+		{1, 2},
+		{0, 2},
+		{0, 1, 3, 4, 5},
+		{2},
+		{2, 6},
+		{2, 6},
+		{4, 5},
 	}
-	if closed < open {
+	start := 2
+	q := make([][]int, len(graph))[len(graph):]
+	q = append(q, graph[start])
 
-		generateParentheses(curr+")", open, closed+1, n)
+	used := make(map[int]bool, len(graph))
+	used = map[int]bool{start: true}
+
+	for len(q) > 0 {
+		for _, key := range q[len(q)-1] {
+			if _, ok := used[key]; !ok {
+				q = append(q, graph[key])
+			}
+			if key == needle {
+				return key
+			}
+			used[key] = true
+		}
+		q = q[:len(q)-1]
 	}
-	return curr
+	return -1
 }
