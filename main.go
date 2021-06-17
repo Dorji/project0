@@ -19,6 +19,7 @@ func main() {
 
 	// do not modify below here, readline is our function
 	// that properly reads in the input for you
+	//
 
 	var arr = []int{2, 3, 4, 1, 6, 10}
 	fmt.Println(ArrayRotation(arr))
