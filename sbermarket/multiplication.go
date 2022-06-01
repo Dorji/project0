@@ -1,4 +1,4 @@
-package sbermarket
+package main
 
 import (
 	"fmt"
