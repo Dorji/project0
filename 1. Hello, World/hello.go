@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func binarySearch(needle int, haystack []int) bool {
+func binarySearch(needle int, haystack []int) int {
 
 	low := 0
 	high := len(haystack) - 1
@@ -18,10 +18,10 @@ func binarySearch(needle int, haystack []int) bool {
 	}
 
 	if low == len(haystack) || haystack[low] != needle {
-		return false
+		return -1
 	}
 
-	return true
+	return low
 }
 
 func main() {
