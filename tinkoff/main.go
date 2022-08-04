@@ -7,7 +7,7 @@ import (
 )
 
 func RunProcessor(wg *sync.WaitGroup, prices []map[string]float64) {
-	go func() {
+	go func(wg *sync.WaitGroup) {
 		defer wg.Done()
 		for _, price := range prices {
 
@@ -15,10 +15,9 @@ func RunProcessor(wg *sync.WaitGroup, prices []map[string]float64) {
 				price[key] = value + 1
 
 			}
-			fmt.Println(price)
 
 		}
-	}()
+	}(wg)
 }
 
 func RunWriter() <-chan map[string]float64 {
