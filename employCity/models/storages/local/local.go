@@ -10,7 +10,7 @@ type StorageLocal struct {
 	storage map[int32]string
 }
 
-func (s *StorageLocal) Get(dgr *pb.DeleteGetRequest) (*pb.Reply, error) {
+func (s *StorageLocal) Get(dgr *pb.GetRequest) (*pb.Reply, error) {
 	if _, ok := s.storage[dgr.Id]; !ok {
 		return &pb.Reply{}, fmt.Errorf("")
 	}
@@ -26,7 +26,7 @@ func (s *StorageLocal) Set(sr *pb.SetRequest) (*pb.Reply, error) {
 	return &pb.Reply{Id: sr.Id, Status: "created"}, nil
 }
 
-func (s *StorageLocal) Delete(dgr *pb.DeleteGetRequest) (*pb.Reply, error) {
+func (s *StorageLocal) Delete(dgr *pb.DeleteRequest) (*pb.Reply, error) {
 
 	delete(s.storage, dgr.Id)
 	return &pb.Reply{Id: dgr.Id, Status: "deleted"}, nil
