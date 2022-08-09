@@ -28,5 +28,5 @@ message VerifyRequest{
 }
 
 message VerifyReplyGet{
-  bytes signatureValid = 1;
+  bool signatureValid = 1;
 }
