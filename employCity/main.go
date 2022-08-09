@@ -12,16 +12,11 @@ import (
 	"google.golang.org/grpc"
 )
 
-type Storage interface {
-	Get(context.Context, *pb.DeleteGetRequest) (*pb.ReplyGet, error)
-	Set(context.Context, *pb.SetRequest) (*pb.Reply, error)
-	Delete(context.Context, *pb.DeleteGetRequest) (*pb.Reply, error)
-}
 type server struct {
 	pb.UnimplementedMyGRPCServer
 }
 
-func (s *server) Get(context.Context, *pb.DeleteGetRequest) (*pb.ReplyGet, error) {
+func (s *server) Get(context.Context, *pb.GetRequest) (*pb.ReplyGet, error) {
 	return &pb.ReplyGet{Id: 1, Body: "created"}, nil
 }
 
@@ -29,7 +24,7 @@ func (s *server) Set(context.Context, *pb.SetRequest) (*pb.Reply, error) {
 	return &pb.Reply{Id: 1, Status: "updated"}, nil
 }
 
-func (s *server) Delete(context.Context, *pb.DeleteGetRequest) (*pb.Reply, error) {
+func (s *server) Delete(context.Context, *pb.DeleteRequest) (*pb.Reply, error) {
 	return &pb.Reply{Id: 1, Status: "deleted"}, nil
 }
 
