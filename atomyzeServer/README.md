@@ -1,23 +1,23 @@
 
-<span  style="font-size: medium; color: aqua " >
+<span  style="font-size: medium; color: lightgrey " >
 
-## Тестовое задание Go Atomyze
+## <span  style="font-size: big; color: lightgrey" >Тестовое задание Go Atomyze</span>
 #### Цель
 
 Разработать сервис для создания и проверки подписи аргументов.
 
-Сервис должен быть описать в формате grpc/protobuf.
+Сервис должен быть описан в формате grpc/protobuf.
 Должна использоваться криптография ECDSA.
 Нужно написать тесты на методы сервиса, с успешными и неуспешными сценариями
 
 #### Методы сервиса
 В сервисе должно быть два метода:
-## <span  style="font-size: big; color: aquamarine" >CreateTransaction</span>
+## <span  style="font-size: big; color: lightgrey" >CreateTransaction</span>
 
-### Входные параметры:
+#### Входные параметры:
 
-args [ ][ ]byte
-private key [ ]byte
+- args [ ][ ]byte
+- private key [ ]byte
 
 #### В методе:
 
@@ -27,15 +27,15 @@ private key [ ]byte
 
 #### Выходные параметры:
 
-hash [ ]byte
-public key  [ ]byte
-signature [ ]byte
-## <span  style="font-size: big; color: aquamarine" >VerifyTransaction</span>
+- hash [ ]byte
+- public key  [ ]byte
+- signature [ ]byte
+## <span  style="font-size: big; color: lightgrey" >VerifyTransaction</span>
 #### Входные параметры:
 
-hash [ ]byte
-public key  [ ]byte
-signature [ ]byte
+- hash [ ]byte
+- public key  [ ]byte
+- signature [ ]byte
 
 #### В методе:
 
@@ -43,6 +43,6 @@ signature [ ]byte
 
 #### Выходные параметры:
 
-signature valid bool
+- signature valid bool
 
 </span>
