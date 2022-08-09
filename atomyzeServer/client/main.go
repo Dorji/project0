@@ -2,39 +2,35 @@ package main
 
 import (
 	"context"
-	"log"
+	"fmt"
 
 	api "atomyzeServer/api/transactions"
-
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 func main() {
-	ServerCaller()
 }
-func ServerCaller() {
-	result := make([][]byte, 0)
-	conn, err := grpc.Dial(":1337", grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatal(err)
-	}
-	c := api.NewTransactionsGRPCClient(conn)
-	res, err := c.CreateTransaction(context.Background(), &api.CreateRequest{
-		Args:       [][]byte{},
-		PrivateKey: nil,
-	})
-	result = append(result, res.GetSignature())
-	result = append(result, res.GetPublicKey())
-	result = append(result, res.GetHash())
 
-	res1, err := c.VerifyTransaction(context.Background(), &api.VerifyRequest{
-		Hash:      res.GetSignature(),
-		PublicKey: res.GetPublicKey(),
-		Signature: res.GetHash(),
+func ServerCallerTrue(c api.TransactionsGRPCClient) error {
+
+	res, err := c.CreateTransaction(context.Background(), &api.CreateRequest{
+		Args:       [][]byte{[]byte("abcd"), []byte("bcde"), []byte("1234"), []byte("4321")},
+		PrivateKey: []byte("MY_PRIVATE_KEY"),
 	})
+	if err != nil {
+		return err
+	}
+	req1 := api.VerifyRequest{
+		Hash:      res.GetHash(),
+		PublicKey: res.GetPublicKey(),
+		Signature: res.GetSignature(),
+	}
+
+	res1, err := c.VerifyTransaction(context.Background(), &req1)
 
 	if res1.GetSignatureValid() != true {
-
+		if err != nil {
+			return fmt.Errorf("signatureInvalid")
+		}
 	}
+	return nil
 }
