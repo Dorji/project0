@@ -13,7 +13,7 @@ import (
 )
 
 type Storage interface {
-	Get(context.Context, *pb.DeleteGetRequest) (*pb.Reply, error)
+	Get(context.Context, *pb.DeleteGetRequest) (*pb.ReplyGet, error)
 	Set(context.Context, *pb.SetRequest) (*pb.Reply, error)
 	Delete(context.Context, *pb.DeleteGetRequest) (*pb.Reply, error)
 }
@@ -21,8 +21,8 @@ type server struct {
 	pb.UnimplementedMyGRPCServer
 }
 
-func (s *server) Get(context.Context, *pb.DeleteGetRequest) (*pb.Reply, error) {
-	return &pb.Reply{Id: 1, Status: "created"}, nil
+func (s *server) Get(context.Context, *pb.DeleteGetRequest) (*pb.ReplyGet, error) {
+	return &pb.ReplyGet{Id: 1, Body: "created"}, nil
 }
 
 func (s *server) Set(context.Context, *pb.SetRequest) (*pb.Reply, error) {
