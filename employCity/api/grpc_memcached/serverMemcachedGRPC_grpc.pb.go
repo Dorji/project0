@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.6.1
-// source: api/grpc_memcached/serverMemcachedGRPC.proto
+// source: api/grpc_memcached/serverMemcachedGRPC.transactions
 
 package grpc_memcached
 
@@ -173,5 +173,5 @@ var MyGRPC_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "api/grpc_memcached/serverMemcachedGRPC.proto",
+	Metadata: "api/grpc_memcached/serverMemcachedGRPC.transactions",
 }

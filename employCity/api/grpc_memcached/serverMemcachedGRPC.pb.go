@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.28.1
 // 	protoc        v3.6.1
-// source: api/grpc_memcached/serverMemcachedGRPC.proto
+// source: api/grpc_memcached/serverMemcachedGRPC.transactions
 
 package grpc_memcached
 
