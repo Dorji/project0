@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MyGRPCClient interface {
-	Get(ctx context.Context, in *DeleteGetRequest, opts ...grpc.CallOption) (*Reply, error)
+	Get(ctx context.Context, in *DeleteGetRequest, opts ...grpc.CallOption) (*ReplyGet, error)
 	Set(ctx context.Context, in *SetRequest, opts ...grpc.CallOption) (*Reply, error)
 	Delete(ctx context.Context, in *DeleteGetRequest, opts ...grpc.CallOption) (*Reply, error)
 }
@@ -35,8 +35,8 @@ func NewMyGRPCClient(cc grpc.ClientConnInterface) MyGRPCClient {
 	return &myGRPCClient{cc}
 }
 
-func (c *myGRPCClient) Get(ctx context.Context, in *DeleteGetRequest, opts ...grpc.CallOption) (*Reply, error) {
-	out := new(Reply)
+func (c *myGRPCClient) Get(ctx context.Context, in *DeleteGetRequest, opts ...grpc.CallOption) (*ReplyGet, error) {
+	out := new(ReplyGet)
 	err := c.cc.Invoke(ctx, "/MyGRPC/Get", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -66,7 +66,7 @@ func (c *myGRPCClient) Delete(ctx context.Context, in *DeleteGetRequest, opts ..
 // All implementations must embed UnimplementedMyGRPCServer
 // for forward compatibility
 type MyGRPCServer interface {
-	Get(context.Context, *DeleteGetRequest) (*Reply, error)
+	Get(context.Context, *DeleteGetRequest) (*ReplyGet, error)
 	Set(context.Context, *SetRequest) (*Reply, error)
 	Delete(context.Context, *DeleteGetRequest) (*Reply, error)
 	mustEmbedUnimplementedMyGRPCServer()
@@ -76,7 +76,7 @@ type MyGRPCServer interface {
 type UnimplementedMyGRPCServer struct {
 }
 
-func (UnimplementedMyGRPCServer) Get(context.Context, *DeleteGetRequest) (*Reply, error) {
+func (UnimplementedMyGRPCServer) Get(context.Context, *DeleteGetRequest) (*ReplyGet, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
 }
 func (UnimplementedMyGRPCServer) Set(context.Context, *SetRequest) (*Reply, error) {

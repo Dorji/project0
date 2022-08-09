@@ -5,7 +5,7 @@ option go_package = "./grpc_memcached";
 
 
 service MyGRPC{
-  rpc Get (DeleteGetRequest) returns (Reply) {}
+  rpc Get (DeleteGetRequest) returns (ReplyGet) {}
   rpc Set (SetRequest) returns (Reply) {}
   rpc Delete (DeleteGetRequest) returns (Reply) {}
 }
@@ -20,4 +20,9 @@ message DeleteGetRequest{
 message Reply{
    int32 id  = 1;
    string status = 2;
+}
+
+message ReplyGet{
+  int32 id  = 1;
+  string body = 2;
 }
