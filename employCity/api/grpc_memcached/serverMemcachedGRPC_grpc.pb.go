@@ -22,9 +22,9 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MyGRPCClient interface {
-	Get(ctx context.Context, in *DeleteGetRequest, opts ...grpc.CallOption) (*ReplyGet, error)
+	Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*ReplyGet, error)
 	Set(ctx context.Context, in *SetRequest, opts ...grpc.CallOption) (*Reply, error)
-	Delete(ctx context.Context, in *DeleteGetRequest, opts ...grpc.CallOption) (*Reply, error)
+	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*Reply, error)
 }
 
 type myGRPCClient struct {
@@ -35,7 +35,7 @@ func NewMyGRPCClient(cc grpc.ClientConnInterface) MyGRPCClient {
 	return &myGRPCClient{cc}
 }
 
-func (c *myGRPCClient) Get(ctx context.Context, in *DeleteGetRequest, opts ...grpc.CallOption) (*ReplyGet, error) {
+func (c *myGRPCClient) Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*ReplyGet, error) {
 	out := new(ReplyGet)
 	err := c.cc.Invoke(ctx, "/MyGRPC/Get", in, out, opts...)
 	if err != nil {
@@ -53,7 +53,7 @@ func (c *myGRPCClient) Set(ctx context.Context, in *SetRequest, opts ...grpc.Cal
 	return out, nil
 }
 
-func (c *myGRPCClient) Delete(ctx context.Context, in *DeleteGetRequest, opts ...grpc.CallOption) (*Reply, error) {
+func (c *myGRPCClient) Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*Reply, error) {
 	out := new(Reply)
 	err := c.cc.Invoke(ctx, "/MyGRPC/Delete", in, out, opts...)
 	if err != nil {
@@ -66,9 +66,9 @@ func (c *myGRPCClient) Delete(ctx context.Context, in *DeleteGetRequest, opts ..
 // All implementations must embed UnimplementedMyGRPCServer
 // for forward compatibility
 type MyGRPCServer interface {
-	Get(context.Context, *DeleteGetRequest) (*ReplyGet, error)
+	Get(context.Context, *GetRequest) (*ReplyGet, error)
 	Set(context.Context, *SetRequest) (*Reply, error)
-	Delete(context.Context, *DeleteGetRequest) (*Reply, error)
+	Delete(context.Context, *DeleteRequest) (*Reply, error)
 	mustEmbedUnimplementedMyGRPCServer()
 }
 
@@ -76,13 +76,13 @@ type MyGRPCServer interface {
 type UnimplementedMyGRPCServer struct {
 }
 
-func (UnimplementedMyGRPCServer) Get(context.Context, *DeleteGetRequest) (*ReplyGet, error) {
+func (UnimplementedMyGRPCServer) Get(context.Context, *GetRequest) (*ReplyGet, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
 }
 func (UnimplementedMyGRPCServer) Set(context.Context, *SetRequest) (*Reply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Set not implemented")
 }
-func (UnimplementedMyGRPCServer) Delete(context.Context, *DeleteGetRequest) (*Reply, error) {
+func (UnimplementedMyGRPCServer) Delete(context.Context, *DeleteRequest) (*Reply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedMyGRPCServer) mustEmbedUnimplementedMyGRPCServer() {}
@@ -99,7 +99,7 @@ func RegisterMyGRPCServer(s grpc.ServiceRegistrar, srv MyGRPCServer) {
 }
 
 func _MyGRPC_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteGetRequest)
+	in := new(GetRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -111,7 +111,7 @@ func _MyGRPC_Get_Handler(srv interface{}, ctx context.Context, dec func(interfac
 		FullMethod: "/MyGRPC/Get",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MyGRPCServer).Get(ctx, req.(*DeleteGetRequest))
+		return srv.(MyGRPCServer).Get(ctx, req.(*GetRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -135,7 +135,7 @@ func _MyGRPC_Set_Handler(srv interface{}, ctx context.Context, dec func(interfac
 }
 
 func _MyGRPC_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteGetRequest)
+	in := new(DeleteRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -147,7 +147,7 @@ func _MyGRPC_Delete_Handler(srv interface{}, ctx context.Context, dec func(inter
 		FullMethod: "/MyGRPC/Delete",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MyGRPCServer).Delete(ctx, req.(*DeleteGetRequest))
+		return srv.(MyGRPCServer).Delete(ctx, req.(*DeleteRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
