@@ -29,7 +29,11 @@ func Test_ServerCallerTrue(t *testing.T) {
 	t.Run("test right grpc calls", func(t *testing.T) {
 		assert.NoError(t, ServerCallerTrue(c, privateKeyBytes))
 	})
+	t.Run("test wrong grpc calls  to create transaction", func(t *testing.T) {
+		assert.NoError(t, ServerCallerFalseCreating(c, privateKeyBytes))
+	})
 	t.Run("test wrong grpc calls", func(t *testing.T) {
-		assert.NoError(t, ServerCallerFalse(c, privateKeyBytes))
+		err := ServerCallerFalseVerification(c, privateKeyBytes)
+		assert.NoError(t, err)
 	})
 }

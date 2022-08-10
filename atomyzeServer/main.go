@@ -22,7 +22,8 @@ type server struct {
 }
 
 func (s server) CreateTransaction(ctx context.Context, request *pb.CreateRequest) (*pb.CreateReply, error) {
-	if request.PrivateKey == nil || request.Args == nil {
+	if request.PrivateKey == nil || request.Args == nil ||
+		len(request.PrivateKey) == 0 || len(request.Args) == 0 {
 		return nil, fmt.Errorf("transaction server: nil argument")
 	}
 
@@ -48,10 +49,16 @@ func generatePublicKeyFromPrivate(privateKey ecdsa.PrivateKey) []byte {
 }
 
 func (s server) VerifyTransaction(ctx context.Context, request *pb.VerifyRequest) (*pb.VerifyReplyGet, error) {
-	if request.Hash == nil || request.Signature == nil || request.PublicKey == nil {
-		return nil, fmt.Errorf("transaction server: nil argument")
+	if request.Hash == nil || request.Signature == nil || request.PublicKey == nil ||
+		len(request.Hash) == 0 || len(request.Signature) == 0 || len(request.PublicKey) == 0 {
+		return nil, fmt.Errorf("transaction server: nil or len=0 argument incoming")
 	}
 	X, Y := elliptic.Unmarshal(elliptic.P256(), request.GetPublicKey())
+
+	if X == nil {
+		return nil, fmt.Errorf("transaction server: bad public key")
+	}
+
 	publicKey := ecdsa.PublicKey{
 		Curve: elliptic.P256(),
 		X:     X,
