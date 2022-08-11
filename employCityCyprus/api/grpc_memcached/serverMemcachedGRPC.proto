@@ -1,0 +1,30 @@
+syntax = "proto3";
+option go_package = "./grpc_memcached";
+
+
+
+service MyGRPC{
+  rpc Get (GetRequest) returns (ReplyGet) {}
+  rpc Set (SetRequest) returns (Reply) {}
+  rpc Delete (DeleteRequest) returns (Reply) {}
+}
+
+message SetRequest{
+  string id = 1;
+  string body = 2;
+}
+message GetRequest{
+  string id = 1;
+}
+message DeleteRequest{
+  string id = 1;
+}
+message Reply{
+  string id = 1;
+  string status = 2;
+}
+
+message ReplyGet{
+  string id = 1;
+  string body = 2;
+}

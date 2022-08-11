@@ -1,0 +1,6 @@
+memcached_server:
+  image: memcached
+  environment:
+    MEMCACHED_CACHE_SIZE: 128
+  ports:
+    - 11211:11211
