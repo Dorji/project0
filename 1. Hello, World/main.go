@@ -9,18 +9,18 @@ import (
 var mu1 = sync.Mutex{}
 var mu2 = sync.Mutex{}
 
-func foo(n int, mu1 chan sync.Mutex, mu2 sync.Mutex) {
+func foo(n int, mu1 sync.Mutex, mu2 sync.Mutex) {
 	for i := 0; i < n; i++ {
 		mu1.Lock()
-		fmt.Print("Foo")
+		fmt.Println("Foo")
 		mu2.Unlock()
 	}
 }
 
-func bar(n int, mu1 chan sync.Mutex, mu2 sync.Mutex) {
+func bar(n int, mu1 sync.Mutex, mu2 sync.Mutex) {
 	for i := 0; i < n; i++ {
 		mu2.Lock()
-		fmt.Print("Bar")
+		fmt.Println("Bar")
 		mu1.Unlock()
 	}
 }
