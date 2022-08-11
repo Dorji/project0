@@ -1,30 +1,33 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
+)
 
-func binarySearch(needle int, haystack []int) int {
+//Надо поправить код, чтобы 10 раз вывело FooBar на новой строке. Нельзя убирать два вызова горутин и циклы в функциях, сигнатуры менять можно:
+var mu1 = sync.Mutex{}
+var mu2 = sync.Mutex{}
 
-	low := 0
-	high := len(haystack) - 1
-
-	for low <= high {
-		median := (low + high) / 2
-
-		if haystack[median] < needle {
-			low = median + 1
-		} else {
-			high = median - 1
-		}
+func foo(n int, mu1 chan sync.Mutex, mu2 sync.Mutex) {
+	for i := 0; i < n; i++ {
+		mu1.Lock()
+		fmt.Print("Foo")
+		mu2.Unlock()
 	}
+}
 
-	if low == len(haystack) || haystack[low] != needle {
-		return -1
+func bar(n int, mu1 chan sync.Mutex, mu2 sync.Mutex) {
+	for i := 0; i < n; i++ {
+		mu2.Lock()
+		fmt.Print("Bar")
+		mu1.Unlock()
 	}
-
-	return low
 }
 
 func main() {
-	items := []int{1, 2, 9, 20, 31, 45, 63, 70, 100}
-	fmt.Println(binarySearch(63, items))
+	n := 10
+	mu2.Lock()
+	go foo(n, mu1, mu2)
+	go bar(n, mu1, mu2)
 }
