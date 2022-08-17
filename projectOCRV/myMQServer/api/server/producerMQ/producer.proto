@@ -1,0 +1,16 @@
+syntax = "proto3";
+option go_package = "./producerMQ";
+
+
+service producerMQ{
+  rpc Send (SendRequest) returns (Reply) {}
+}
+message SendRequest{
+  string id = 1;
+  string body = 2;
+  string queue = 3;
+}
+message Reply{
+  string queue = 1;
+  string status = 2;
+}

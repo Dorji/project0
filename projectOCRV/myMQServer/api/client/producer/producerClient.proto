@@ -1,0 +1,11 @@
+syntax = "proto3";
+package google.protobuf;
+option go_package = "./producerClient";
+
+
+service producerClient {
+  rpc WrongFormat(WrongFormatMsg) returns (google.protobuf.Empty){}
+}
+message WrongFormatMsg{
+
+}
