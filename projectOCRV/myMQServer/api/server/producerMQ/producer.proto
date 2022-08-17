@@ -4,7 +4,7 @@ syntax = "proto3";
 option go_package = "./producerMQ";
 
 
-service producerMQ{
+service ProducerMQ{
   rpc HandleMessage (SendRequest) returns (Reply) {}
   rpc GetQueueList (GetQueuesListRequest) returns (ListQueues) {}
 }

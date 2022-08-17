@@ -3,9 +3,11 @@ import "google/protobuf/empty.proto";
 option go_package = "./producerClient";
 
 
-service producerClient {
+service ProducerClient {
   rpc WrongFormat(WrongFormatMsg) returns (google.protobuf.Empty){}
 }
 message WrongFormatMsg{
-
+  string id = 1;
+  string body = 2;
+  string queue = 3;
 }

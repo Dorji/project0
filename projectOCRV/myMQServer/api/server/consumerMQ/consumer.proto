@@ -3,7 +3,7 @@ import "google/protobuf/empty.proto";
 
 option go_package = "./consumerMQ";
 
-service producerMQ{
+service ConsumerMQ{
   rpc Follow (FolowRequest) returns (Reply) {}
   rpc Success (SuccessRequest) returns (google.protobuf.Empty) {}
   rpc MessageHandleError (MessageHandleErrorRequest) returns (google.protobuf.Empty) {}

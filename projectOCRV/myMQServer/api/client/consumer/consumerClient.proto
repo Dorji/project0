@@ -3,3 +3,12 @@ import "google/protobuf/empty.proto";
 option go_package = "./consumerClient";
 
 
+service ConsumerClient {
+  rpc MsgFromQueue(WrongFormatMsg) returns (google.protobuf.Empty){}
+}
+
+message WrongFormatMsg{
+  string id = 1;
+  string body = 2;
+  string queue = 3;
+}
