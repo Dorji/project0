@@ -1,9 +1,13 @@
 syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
 option go_package = "./producerMQ";
 
 
 service producerMQ{
-  rpc Send (SendRequest) returns (Reply) {}
+  rpc HandleMessage (SendRequest) returns (Reply) {}
+  rpc GetQueueList (GetQueuesListRequest) returns (ListQueues) {}
 }
 message SendRequest{
   string id = 1;
@@ -13,4 +17,13 @@ message SendRequest{
 message Reply{
   string queue = 1;
   string status = 2;
+}
+message GetQueuesListRequest{
+  string id = 1;
+  string body = 2;
+}
+
+message ListQueues{
+  string id = 1;
+  string body = 2;
 }

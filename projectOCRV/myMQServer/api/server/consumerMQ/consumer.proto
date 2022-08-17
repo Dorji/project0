@@ -1,5 +1,5 @@
 syntax = "proto3";
-package google.protobuf;
+import "google/protobuf/empty.proto";
 
 option go_package = "./consumerMQ";
 
