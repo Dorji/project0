@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os/exec"
 	"sync"
 	"time"
 )
@@ -9,11 +10,13 @@ import (
 func RunProcessor(wg *sync.WaitGroup, prices []map[string]float64) {
 	go func(wg *sync.WaitGroup) {
 		defer wg.Done()
+		mu := sync.Mutex{}
 		for _, price := range prices {
 
 			for key, value := range price {
+				mu.Lock()
 				price[key] = value + 1
-
+				mu.Unlock()
 			}
 
 		}
@@ -45,6 +48,11 @@ func RunWriter() <-chan map[string]float64 {
 func main() {
 	p := RunWriter()
 	var prices []map[string]float64
+
+	cmd := exec.Command("uname", "-a")
+
+	output, err := cmd.Output()
+	fmt.Println(string(output), "|||", err)
 
 	for v := range p {
 		prices = append(prices, v)
