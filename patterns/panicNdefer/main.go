@@ -2,17 +2,20 @@ package main
 
 import (
 	"fmt"
-	"time"
 )
 
 // дан целочисленный массив и целое число (target). вернуть индексы двух чисел, сумма которых равна target
 // Input: nums = [3,9,11,15], target = 14
 // Output: [0,2]
+func doRecover() {
+	fmt.Println("recovered =>", recover()) // prints: recovered => <nil>
+}
 
 func main() {
 	fmt.Println(333)
 	go func() {
-		defer fmt.Println(123456)
+		defer fmt.Println(123456) //сработает в любом случает
+		defer doRecover()         // перехват работает только в defer
 
 		nums := []int{3, 9, 11, 15}
 		target := 14
@@ -31,7 +34,6 @@ func main() {
 			}
 		}
 	}()
-	time.Sleep(1 * time.Second)
 	fmt.Println(222)
 }
 
