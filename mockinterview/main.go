@@ -29,6 +29,10 @@ func main(){
 
 	fmt.Println("Задача4")
 	fmt.Println(multiplicationOfOthers([]int{1,2,3,4,5}))
+	fmt.Println(multiplicationOfOthers([]int{1,2,3,4,5,0}))
+	fmt.Println(multiplicationOfOthers([]int{1,0,3,4,5,0}))
+	fmt.Println(multiplicationOfOthers([]int{1,0,3,4,5,6}))
+	fmt.Println(multiplicationOfOthers([]int{1,2,3,4,5,6}))
 }
 // Задача1: сформировать массив из N разных случайных элементов с помощью math/rand
 func createRandArray(n int) []interface{}{
@@ -80,9 +84,27 @@ func inputInSlice(slc []string,n int, val [3]string) []string {
 }
 
 // Задача4: дано слайс чисел, заменить каждое на произведение остальных
-func multiplicationOfOthers([]int)[]int{
-	res:=[]int{}
-	for k,v :=range 
-
+func multiplicationOfOthers(slc []int)[]int{
+	res:=make([]int,len(slc))
+	val:=1
+	zeroElem:=-1
+	for k,_ :=range slc{
+		if slc[k]==0{
+			if zeroElem ==-1{
+				zeroElem=k
+			}else{
+				return make([]int,len(slc),len(slc))
+			}
+		}else{
+			val=slc[k]*val
+		}
+	}
+	for k,_ :=range slc{
+		if k!=zeroElem{
+			res[k]=val/slc[k]
+		}else{
+			res[k]=0
+		}
+	}
 	return res
 }
