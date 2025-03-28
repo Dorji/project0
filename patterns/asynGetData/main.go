@@ -5,11 +5,18 @@ import (
 	"time"
 )
 
+type ErrorNew struct{
+	error
+}
+
 // Асинхронное получение данных для отложенного получения данных и парралельных работ
 func main() {
-	for i := 0; i < 3; i++ {
-		getPage()
-	}
+	// for i := 0; i < 3; i++ {
+	// 	getPage()
+	// }
+	var err ErrorNew
+	err.error=fmt.Errorf("text my error")
+	fmt.Println(err.Error())
 
 }
 func getPage() {
