@@ -52,4 +52,5 @@ func main() {
     ctx, cancel := context.WithTimeout(context.Background(), 1 * time.Second)
 
     fmt.Println(predictableFunc(ctx))
+    cancel()
 }
