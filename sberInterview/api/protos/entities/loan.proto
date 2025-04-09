@@ -1,0 +1,52 @@
+syntax = "proto3";
+package entities;
+option go_package = "github.com/Dorji/sberInterview/api/protos/entities";
+
+import "google/protobuf/timestamp.proto";  // Для даты
+
+
+message LoanRequest {
+    int64 object_cost = 1;       // стоимость объекта 
+    int64 initial_payment = 2;   // первоначальный взнос
+    int64 months = 3;            // срок 
+    LoanProgram program = 4;     // блок программы кредита
+}
+
+// Блок программы кредита
+message LoanProgram {
+  bool salary = 1;    // корпоративная программа
+  bool military = 2;  // военная ипотека
+  bool base = 3;      // базовая программа
+}
+
+// Блок агрегированных данных
+message LoanAggregates {
+  int64 rate = 1;                          // ставка (% годовых)
+  int64 loan_sum = 2;                       // сумма кредита
+  int64 monthly_payment = 3;                // платеж в месяц
+  int64 overpayment = 4;                    // переплата
+  google.protobuf.Timestamp last_payment_date = 5;  // дата последнего платежа
+}
+
+// Итоговый ответ
+message LoanResult {
+  LoanParams params = 1;
+  LoanProgram program = 2;
+  LoanAggregates aggregates = 3;
+}
+
+// Обертка для ответа (если нужно)
+message LoanResponse {
+  LoanResult result = 1;
+}
+
+
+message CacheResult {
+  repeated LoanResult results= 1;
+}
+// Блок параметров кредита
+message LoanParams {
+  int64 object_cost = 1;      // стоимость объекта (рубли)
+  int64 initial_payment = 2;  // первоначальный взнос
+  int64 months = 3;           // срок (месяцы)
+}
