@@ -38,6 +38,10 @@ type ManageObject struct{
     ctx *context.Context
 }
 
+func main(){
+    mObj:=ManageObject{}
+}
+
 func (mo *ManageObject) Manage(){
     resDataSlc:=make([]*Data,len(dataSlc)*len(mo.p))
     
@@ -53,7 +57,7 @@ func (mo *ManageObject) Manage(){
            
     for k,_:= range mo.p {
             wg.Add(1)
-            go runProc(ctx context.Context,wg,myCancel <-chProc chan *Data)
+            go runProc(ctxC,wg,myCancel)
     }
     
     
@@ -61,17 +65,18 @@ func (mo *ManageObject) Manage(){
     for i,_:= range dataSlc {
         
         for k,_:= range mo.p {
-            dataSlc[i]->chProc
+            chProc<-dataSlc[i]
                
         }
         
-         func (){
-             switch{
-                case resData<-chRes:
+        go func (){
+             var resData *Data
+             select{
+                case resData:=<-chRes:
                     resDataSlc=append(resDataSlc,resData)
                 case <-ctx.Done():
                     return
-             }
+                }
            
          }()
             func (){
