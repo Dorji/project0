@@ -1,111 +1,111 @@
 package techtask
- 
-// Вводные:
- 
-type Data struct {
-    ID      int
-    Payload map[string]interface{}
-}
- 
-type Reader interface {
-    Read() []*Data
-}
- 
-type Processor interface {
-    Process(Data) ([]*Data, error)
-}
- 
-type Writer interface {
-    Write([]*Data)
-}
- 
+
+import (
+	"context"
+	"sync"
+)
 // Необходимо имплементировать интерфейс Manager так, чтобы он:
 // - перманентно и синхронно принимал данные из Reader
 // - обрабатывал все полученные данные на каждом из списка Processor
 // - в случае отсутствия ошибок при обработке, полученные в процессе обработки данные передавал в Writer
 // - при возникновении ошибки при обработке, ничего не отправлял во Writer
- 
-type Manager interface {
-    Manage() // blocking
-}
- 
-// Реализация:
 
-type ManageObject struct{
-    r *Reader
-    p []*Processor
-    w * Writer
-    ctx *context.Context
+// ManagerImpl реализует интерфейс Manager
+type ManagerImpl struct {
+	reader     Reader       // Источник данных
+	processors []Processor  // Список процессоров для обработки
+	writer     Writer       // Получатель обработанных данных
+	ctx        context.Context // Контекст для управления жизненным циклом
 }
 
-func main(){
-    mObj:=ManageObject{}
+func main() {
+	// Создаем зависимости
+	reader := NewSomeReader()
+	processors := []Processor{NewProcessor1(), NewProcessor2()}
+	writer := NewSomeWriter()
+	
+	// Создаем контекст с возможностью отмены
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	
+	// Создаем и запускаем менеджер
+	manager := NewManager(reader, processors, writer, ctx)
+	go manager.Manage()
+	
+	// ... остальная логика приложения ...
 }
 
-func (mo *ManageObject) Manage(){
-    resDataSlc:=make([]*Data,len(dataSlc)*len(mo.p))
-    
-    var err  error
-    
-    for{
-        
-    dataSlc:=mo.r.Read()
-    wg:=&sync.WaitGroup{}
-    ctxC,myCancel:= context.WithCancel()
-    chProc:= make(chan *Data,len(mo.p))
-    chRes:= make(chan *Data,len(mo.p))
-           
-    for k,_:= range mo.p {
-            wg.Add(1)
-            go runProc(ctxC,wg,myCancel)
-    }
-    
-    
-    LOOP:
-    for i,_:= range dataSlc {
-        
-        for k,_:= range mo.p {
-            chProc<-dataSlc[i]
-               
-        }
-        
-        go func (){
-             var resData *Data
-             select{
-                case resData:=<-chRes:
-                    resDataSlc=append(resDataSlc,resData)
-                case <-ctx.Done():
-                    return
-                }
-           
-         }()
-            func (){
-            wg.Wait()
-            close(chProc)
-            close(chRes)
-            }()
-    }
-            
-     if ctx.Err()==nil{
-        mo.w.Write(resDataSlc)
-     }
-    
-    resDataSlc = resDataSlc[:0]
-    
-    }
+// NewManager создает новый экземпляр менеджера
+func NewManager(r Reader, p []Processor, w Writer, ctx context.Context) Manager {
+	return &ManagerImpl{
+		reader:     r,
+		processors: p,
+		writer:     w,
+		ctx:        ctx,
+	}
 }
 
-func runProc(ctx *context.Context,wg *sync.WaitGroup, myCancel func(), chProc <-chan *Data,chRes chan *Data)([]*Data, error){
-    defer wg.Done()
-    var val *Data
-                select {
-                    case val<-chProc:
-                    data,err:=mo.p.Process(val)
-                    if err!=nil{
-                        myCancel()
-                    }
-                    data->chRes
-                    case <-ctx.Done():
-                        return
-                }
+// Manage - основной метод, реализующий логику управления
+func (m *ManagerImpl) Manage() {
+	for {
+		select {
+		case <-m.ctx.Done(): // Проверяем не был ли отменен контекст
+			return
+		default:
+			// Читаем данные из источника
+			dataSlice := m.reader.Read()
+			if len(dataSlice) == 0 {
+				continue
+			}
+
+			var wg sync.WaitGroup
+			errorChan := make(chan error, len(dataSlice)*len(m.processors))
+			resultChan := make(chan *Data, len(dataSlice)*len(m.processors))
+
+			// Обрабатываем каждое данное через каждый процессор
+			for _, data := range dataSlice {
+				for _, processor := range m.processors {
+					wg.Add(1)
+					go func(d Data, p Processor) {
+						defer wg.Done()
+						results, err := p.Process(d)
+						if err != nil {
+							errorChan <- err
+							return
+						}
+						for _, result := range results {
+							resultChan <- result
+						}
+					}(*data, processor)
+				}
+			}
+
+			// Ждем завершения всех обработчиков
+			go func() {
+				wg.Wait()
+				close(errorChan)
+				close(resultChan)
+			}()
+
+			// Проверяем наличие ошибок
+			hasErrors := false
+			for err := range errorChan {
+				if err != nil {
+					hasErrors = true
+					break
+				}
+			}
+
+			// Если ошибок нет - записываем результаты
+			if !hasErrors {
+				var results []*Data
+				for result := range resultChan {
+					results = append(results, result)
+				}
+				if len(results) > 0 {
+					m.writer.Write(results)
+				}
+			}
+		}
+	}
 }

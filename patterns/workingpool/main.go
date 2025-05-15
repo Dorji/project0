@@ -2,28 +2,46 @@ package main
 
 import (
 	"fmt"
-	"runtime"
+	"sync"
+	"time"
 )
 
-func main() {
-	chanForWorker := make(chan string)
-	for i := 0; i < 3; i++ {
-		go worker(chanForWorker, i) // запускаем три разгребатора дерьма
+
+func main(){
+	WorkerPool(5)
+} 
+//Реализовать worker pool. Есть 10 задач (функций), каждая засыпает на 1 сек и выводит номер воркера, который эту задачу исполнил. Количество воркеров задается при запуске.
+
+func WorkerPool(num int){
+	chanWork:=make(chan *Work ,0)
+	// ctx,cancel:=context.WithCancel(context.Background())
+	wg:= &sync.WaitGroup{}
+	for i:=0;i<num;i++{
+		wg.Add(1)
+		go worker(wg, num, chanWork )
 	}
 
-	months := []string{
-		"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"}
-
-	for _, month := range months {
-		chanForWorker <- month //кидаем дерьмо лопатами
+	
+	for i:=0;i<10;i++{
+		chanWork<-&Work{ number:i}
 	}
-	close(chanForWorker) // обязательно закрывваем иначе не дождёмся выполнения, закрывается (close()) когда нет данных внутри канала
+	
+	close(chanWork)
+	wg.Wait()
 }
 
-func worker(in <-chan string, th int) {
-	for v := range in {
-		fmt.Println("thread ", th, "get ", v)
-		runtime.Gosched() //распределяем по трём горутинам-разгребаторам
-	}
+type Work struct{
+	number int
+}
 
+func (w *Work)StartWork(){
+	time.Sleep(time.Second)
+	fmt.Println(w.number)
+}
+func worker( wg *sync.WaitGroup, num int, chanWork chan *Work){
+	defer wg.Done()
+	for val:=range chanWork{
+		val.StartWork()
+	}
+		
 }
