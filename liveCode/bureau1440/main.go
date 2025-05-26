@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"time"
+	"errors"
 )
 
 func init() {
@@ -26,23 +27,29 @@ func unpredictableFunc() int64 {
 // Дополнительно нужно измерить, сколько выполнялась эта функция (просто вывести в лог).
 // Сигнатуру функцию обёртки менять можно.
 func predictableFunc(ctx context.Context) (int64, error) {
-	start := time.Now()
-	ch := make(chan int64, 1)
+    start := time.Now()
+    ch := make(chan int64, 1)
 
-	go func() {
-		ch <- unpredictableFunc()
-	}()
+    go func() {
+        defer close(ch) // закрываем канал после завершения функции
+        ch <- unpredictableFunc()
+    }()
 
-	select {
-	case <-ctx.Done():
-		duration := time.Since(start)
-		fmt.Printf("Function execution timed out after %v\n", duration)
-		return 0, ctx.Err()
-	case res := <-ch:
-		duration := time.Since(start)
-		fmt.Printf("Function completed successfully in %v\n", duration)
-		return res, nil
-	}
+    select {
+    case <-ctx.Done():
+        duration := time.Since(start)
+        fmt.Printf("Function execution timed out after %v\n", duration)
+        return 0, ctx.Err()
+    case res, ok := <-ch:
+        duration := time.Since(start)
+        if !ok {
+            // На случай, если канал закрылся до отправки значения (хотя в данном примере маловероятно)
+            fmt.Printf("Function failed after %v\n", duration)
+            return 0, errors.New("function failed")
+        }
+        fmt.Printf("Function completed successfully in %v\n", duration)
+        return res, nil
+    }
 }
 
 func main() {
