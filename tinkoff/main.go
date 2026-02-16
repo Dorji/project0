@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+// Закоммитится али или нет
+
 func RunProcessor(wg *sync.WaitGroup, prices []map[string]float64) {
 	go func(wg *sync.WaitGroup) {
 		defer wg.Done()
