@@ -26,15 +26,8 @@ func main() {
 		close(ch)
 	}()
 
-LOOP:
-	for {
-		select {
-		case s, ok := <-ch:
-			if !ok {
-				break LOOP
-			}
-			fmt.Println(s)
-		}
+	for s := range <-ch {
+		fmt.Println(s)
 	}
 
 }
