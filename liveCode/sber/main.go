@@ -3,8 +3,6 @@
 package main
 
 import (
-	"context"
-	"fmt"
 	"sync"
 )
 
@@ -24,11 +22,11 @@ func NewAsyncPool(size int) *AsyncPool {
 }
 
 func (a *AsyncPool) TryDo(work func()) error {
-	a.maxChan<- struct{}{}
+	a.maxChan <- struct{}{}
 	a.wg.Add(1)
-	go func ()  {
+	go func() {
 		defer a.wg.Done()
-		err:= work()
+		err := work()
 		a.mx.Lock()
 		<-a.maxChan
 	}()

@@ -1,5 +1,0 @@
-bind_port = ":8080"
-user = "postgres"
-password = "1"
-dbname = "product"
-sslmode = "disable"

@@ -1,9 +1,7 @@
 package main
 
 import (
-	"context"
 	"errors"
-	"fmt"
 	"log"
 	"sync"
 	"time"
@@ -16,14 +14,14 @@ func (w *Work) startWork() {
 }
 
 type WorkHandler struct {
-	chWork   chan *Work       // канал для задач
-	chPool   chan struct{}    // семафор пула
-	queue    []*Work          // очередь задач
-	maxSize  int              // макс. размер очереди
-	mtx      sync.Mutex       // для очереди
-	wg       sync.WaitGroup   // для ожидания завершения
-	stopChan chan struct{}    // для остановки
-	cond     *sync.Cond       // для уведомлений о новых задачах
+	chWork   chan *Work     // канал для задач
+	chPool   chan struct{}  // семафор пула
+	queue    []*Work        // очередь задач
+	maxSize  int            // макс. размер очереди
+	mtx      sync.Mutex     // для очереди
+	wg       sync.WaitGroup // для ожидания завершения
+	stopChan chan struct{}  // для остановки
+	cond     *sync.Cond     // для уведомлений о новых задачах
 }
 
 func NewHandler(maxSize, poolSize int) (*WorkHandler, error) {

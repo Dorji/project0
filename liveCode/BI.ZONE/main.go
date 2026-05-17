@@ -4,6 +4,7 @@ import (
 	"context"
 	"sync"
 )
+
 // Необходимо имплементировать интерфейс Manager так, чтобы он:
 // - перманентно и синхронно принимал данные из Reader
 // - обрабатывал все полученные данные на каждом из списка Processor
@@ -12,9 +13,9 @@ import (
 
 // ManagerImpl реализует интерфейс Manager
 type ManagerImpl struct {
-	reader     Reader       // Источник данных
-	processors []Processor  // Список процессоров для обработки
-	writer     Writer       // Получатель обработанных данных
+	reader     Reader          // Источник данных
+	processors []Processor     // Список процессоров для обработки
+	writer     Writer          // Получатель обработанных данных
 	ctx        context.Context // Контекст для управления жизненным циклом
 }
 
@@ -23,15 +24,15 @@ func main() {
 	reader := NewSomeReader()
 	processors := []Processor{NewProcessor1(), NewProcessor2()}
 	writer := NewSomeWriter()
-	
+
 	// Создаем контекст с возможностью отмены
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	
+
 	// Создаем и запускаем менеджер
 	manager := NewManager(reader, processors, writer, ctx)
 	go manager.Manage()
-	
+
 	// ... остальная логика приложения ...
 }
 
