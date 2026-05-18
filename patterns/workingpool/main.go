@@ -6,30 +6,30 @@ import (
 	"time"
 )
 
-
+// WorkerPool отличается просто от WaitGroup тем что создает ОГРАНИЧЕННОЕ количество воркеров а не равное количеству задач
 func main() {
 	WorkerPool(5)
 }
 func WorkerPool(numWorkers int) {
 	// Вариант 1: Буферизированный канал
 	chanWork := make(chan *Work, 10) // буфер на все задачи
-	
+
 	// Вариант 2: Отправка в отдельной горутине
 	// chanWork := make(chan *Work)
-	
+
 	wg := &sync.WaitGroup{}
-	
+
 	// Запускаем воркеры
 	for i := 0; i < numWorkers; i++ {
 		wg.Add(1)
 		go worker(i+1, wg, chanWork) // i+1 чтобы нумерация была с 1
 	}
-	
+
 	// Отправляем задачи
 	for i := 0; i < 10; i++ {
 		chanWork <- &Work{number: i + 1}
 	}
-	
+
 	close(chanWork) // Сигнал воркерам что задач больше не будет
 	wg.Wait()       // Ждем завершения всех воркеров
 }
