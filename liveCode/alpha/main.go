@@ -36,7 +36,7 @@ func randUniqSlice(n int)[]int{
 //3 Реализовать worker pool. Есть 10 задач (функций), каждая засыпает на 1 сек и выводит номер воркера, который эту задачу исполнил. Количество воркеров задается при запуске.
 
 func WorkerPool(num int){
-	chanWork:=make(chan *Work ,0)
+	chanWork:=make(chan *Work ,num)
 	
 	for i:=0;i<num;i++{
 		go worker( num, chanWork )
