@@ -5,7 +5,7 @@ import (
 )
 
 type ShardedStorage struct {
-	mp  map[string]*shard
+	mp map[string]*shard
 }
 
 type shard struct {
@@ -24,7 +24,7 @@ func NewShardedStorage(ttlSeconds uint64) *Storage {
 	}
 }
 func Get() {
-	
+
 }
 func Set() {
 
