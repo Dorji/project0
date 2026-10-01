@@ -173,7 +173,7 @@ func (s *ShardedStorage) CleanExpired() int {
 func main() {
 	// Создаём хранилище с 16 шардами
 	cache := NewSharded(16)
-
+ 
 	// ======== Базовые операции ========
 	fmt.Println("=== Базовые операции ===")
 
