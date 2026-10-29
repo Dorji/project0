@@ -1,0 +1,8 @@
+Hello, I am very interested in this position.
+I have a total of 9 years of development experience:
+the last 6 years spent working with Golang,
+and the preceding 3 years with PHP/JS.
+I possess extensive backend expertise, including Typescript, AWS, React, Kubernetes, databases, protocols, caching, algorithms, development methodologies, and design patterns.
+
+Further details can be found in my resume.
+Thank you for your time and consideration.
